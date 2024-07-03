@@ -1,6 +1,8 @@
 require('dotenv').config();
 
-const { Client, Events, GatewayIntentBits } = require('discord.js')
+const { Client, Events, GatewayIntentBits, REST } = require('discord.js')
+
+const { clientReadyHandler } = require('./events/clientReady')
 
 const client = new Client({
   intents: [
@@ -8,8 +10,6 @@ const client = new Client({
   ]
 });
 
-client.on(Events.ClientReady, () => {
-  console.log('Bot is ready')
-})
+client.on(Events.ClientReady, clientReadyHandler)
 
 client.login(process.env.DISCORD_TOKEN);
