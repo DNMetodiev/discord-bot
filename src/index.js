@@ -1,8 +1,11 @@
 require('dotenv').config();
 
-const { Client, Events, GatewayIntentBits, REST } = require('discord.js')
+const { Client, Collection, Events, GatewayIntentBits } = require('discord.js')
 
-const { clientReadyHandler } = require('./events/clientReady')
+const { clientReadyHandler } = require('./events/clientReady');
+const { interactionCreateHandler } = require('./events/interactionCreate')
+
+const pingCommand = require('./commands/ping')
 
 const client = new Client({
   intents: [
@@ -10,6 +13,12 @@ const client = new Client({
   ]
 });
 
-client.on(Events.ClientReady, clientReadyHandler)
+client.commands = new Collection()
+
+client.commands.set(pingCommand.data.name, pingCommand)
+
+client.once(Events.ClientReady, clientReadyHandler);
+
+client.on(Events.InteractionCreate, interactionCreateHandler)
 
 client.login(process.env.DISCORD_TOKEN);
